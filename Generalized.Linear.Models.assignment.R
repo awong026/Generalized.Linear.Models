@@ -52,6 +52,15 @@ summary(glm4)
 #Residual deviance: 549.49  on 165  degrees of freedom
 1-pchisq(549.49,165) #P value is 0, so Ha: model is not adequate
 
+##to see the effect of adding the new terms
+anova(glm, glm4) ##By adding the interaction effect in our final model the deviance was reduced by 11.468 and only 4 df loss
+
+##Look at residuals
+plot(glm4$residuals) #Looks good except maybe some outliers
+
+#To get probablity of how many satelites for each combination
+glm$fitted.values
+
 ##Since I am suppose to use Poisson model only the analysis stops. Would need to check with person asking question if
 ## I can use other families or tests. My results are that poission regression with the canoical link of log is not 
 #a good fit for the data
@@ -97,7 +106,14 @@ summary(logreg3) #AIC 306.65
 #Residual deviance:   84.163  on 68  degrees of freedom
 1-pchisq(84.163,68) #p value is .08 which means H0 is true
 
+##to see the effect of adding the new terms
+anova(logreg, logreg3) ##By adding the interaction effect in our final model the deviance was reduced by 37.445 and only 1 df loss
 
+##Look at residuals
+plot(logreg3$residuals) #Looks good
+
+#To get probablity of how many deaths for each combination
+logreg3$fitted.values
 
 #############################################################3
 
@@ -130,3 +146,14 @@ summary(probit3)
 
 probit4 <- glm(cbind(Deaths, NDeath) ~ Severity + Delay  + AgeGroup + Region, family = quasibinomial(link = probit), data = heart2)
 summary(probit4)
+
+##model probit 2 was better than these. 
+
+##to see the effect of adding the new terms
+anova(probit, probit2) ##By adding the interaction effect in our final model the deviance was reduced by 20.416 and only 1 df loss
+
+##Look at residuals
+plot(probit2$residuals) #Looks good
+
+#To get probablity of how many deaths for each combination
+probit2$fitted.values
