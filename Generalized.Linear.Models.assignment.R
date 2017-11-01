@@ -67,7 +67,7 @@ glm$fitted.values
 
 ###############################################################################
 
-#Question 2: 2.	Use the data set heart to fit a logistic regression with canonical link to Death using covariates
+#Question 2:Use the data set heart to fit a logistic regression with canonical link to Death using covariates
 #AgeGroup, Severity, Delay, Region.  Note here that the data is in matrix form: death and Total, 
 #you want to input the data to the model as death and non-death.
 
@@ -117,7 +117,7 @@ logreg3$fitted.values
 
 #############################################################3
 
-#Question 3:3.	Use the data set heart to fit a logistic regression 
+#Question 3:Use the data set heart to fit a logistic regression 
 #using a probit link to the variable Death using covariates AgeGroup, Severity, Delay and Region.
 
 ###############################################################
