@@ -82,7 +82,7 @@ NDeath <- heart$Patients-heart$Death
 heart2 <- data.frame(cbind(Deaths = heart$Deaths, NDeath = NDeath, AgeGroup = heart$AgeGroup, Severity = heart$Severity, Delay = heart$Delay, Region = heart$Region))
 head(heart2)
 attach(heart2)
-logreg <- glm(cbind(Deaths, NDeath) ~ AgeGroup + Severity + Delay + Region, family = binomial, data = heart2)
+logreg <- glm(cbind(Deaths, NDeath) ~ as.factor(AgeGroup) + as.factor(Severity) + as.factor(Delay) + as.factor(Region), family = binomial, data = heart2)
 summary(logreg)
 
 #Deivance resids centered around zero
@@ -100,7 +100,7 @@ summary(logreg2)
 1-pchisq(77.445,58) #p value is .04 which means Ha is true
 
 #Let's try interaction effect: AgeGroup * Severity
-logreg3 <- glm(cbind(Deaths, NDeath) ~ AgeGroup * Severity + Delay + Region, family = binomial, data = heart2)
+logreg3 <- glm(cbind(Deaths, NDeath) ~ as.factor(AgeGroup) * as.factor(Severity) + as.factor(Delay) + as.factor(Region), family = binomial, data = heart2)
 summary(logreg3) #AIC 306.65
 #Sig: All Sig
 #Residual deviance:   84.163  on 68  degrees of freedom
