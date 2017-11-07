@@ -36,7 +36,7 @@ summary(glm2)
 1-pchisq(555.41,168) #P value is 0, so Ha: model is not adequate
 
 #Lets try another interaction effect: Width * Dark * GoodSpine
-glm3 <- glm(Satellites ~ Width*Dark*GoodSpine,family = poisson, data = crabs) #Default link is canonical
+glm3 <- glm(Satellites ~ Width*Dark+GoodSpine,family = poisson, data = crabs) #Default link is canonical
 summary(glm3)
 
 #Deviance Residuals center around zero, which is good
@@ -67,7 +67,7 @@ glm$fitted.values
 
 ###############################################################################
 
-#Question 2:Use the data set heart to fit a logistic regression with canonical link to Death using covariates
+#Question 2: Use the data set heart to fit a logistic regression with canonical link to Death using covariates
 #AgeGroup, Severity, Delay, Region.  Note here that the data is in matrix form: death and Total, 
 #you want to input the data to the model as death and non-death.
 
@@ -82,32 +82,34 @@ NDeath <- heart$Patients-heart$Death
 heart2 <- data.frame(cbind(Deaths = heart$Deaths, NDeath = NDeath, AgeGroup = heart$AgeGroup, Severity = heart$Severity, Delay = heart$Delay, Region = heart$Region))
 head(heart2)
 attach(heart2)
-logreg <- glm(cbind(Deaths, NDeath) ~ as.factor(AgeGroup) + as.factor(Severity) + as.factor(Delay) + as.factor(Region), family = binomial, data = heart2)
+logreg <- glm(cbind(Deaths, NDeath) ~ factor(AgeGroup) + factor(Severity) + factor(Delay) + factor(Region), family = binomial, data = heart2)
 summary(logreg)
 
 #Deivance resids centered around zero
-#All are sig
-#Residual deviance:  121.61  on 69  degrees of freedom
+#All are sig, except delay 2 and region 2
+#AIC = 341.6
+#Residual deviance:  113.11  on 65  degrees of freedom
 ##to test H0: the model is  adequate vs Ha: the model is not adequate. 
-1-pchisq(121.61,69) #pvalue below .05 so Ha is adequate
+1-pchisq(113.11,65) #pvalue below .05 so Ha. Model is not adequate
 
 #Let's try with interaction effect: AgeGroup * Severity * Delay * Region
-logreg2 <- glm(cbind(Deaths, NDeath) ~ AgeGroup * Severity * Delay * Region, family = binomial, data = heart2)
+logreg2 <- glm(cbind(Deaths, NDeath) ~ factor(AgeGroup) * factor(Severity) * factor(Delay) * factor(Region), family = binomial, data = heart2)
 summary(logreg2)
 
-#Nothing sig
-#Residual deviance:   77.445  on 58  degrees of freedom
-1-pchisq(77.445,58) #p value is .04 which means Ha is true
+#Several things are sig, but there is a really low res deviance and 0 degrees of freedom. Not good
+#AIC = 358.5
+#Residual deviance: 2.7148e-10  on  0  degrees of freedom
+1-pchisq(.00000000027,0) #p value is 0 which means Ha is true
 
 #Let's try interaction effect: AgeGroup * Severity
-logreg3 <- glm(cbind(Deaths, NDeath) ~ as.factor(AgeGroup) * as.factor(Severity) + as.factor(Delay) + as.factor(Region), family = binomial, data = heart2)
-summary(logreg3) #AIC 306.65
-#Sig: All Sig
-#Residual deviance:   84.163  on 68  degrees of freedom
-1-pchisq(84.163,68) #p value is .08 which means H0 is true
+logreg3 <- glm(cbind(Deaths, NDeath) ~ factor(AgeGroup) * factor(Severity) + factor(Delay) + factor(Region), family = binomial, data = heart2)
+summary(logreg3) #AIC 312.8
+#Sig: All Sig, except region 2 and delay 2
+#Residual deviance:   76.31  on 61  degrees of freedom
+1-pchisq(76.31,61) #p value is .0895 which means H0 is true
 
 ##to see the effect of adding the new terms
-anova(logreg, logreg3) ##By adding the interaction effect in our final model the deviance was reduced by 37.445 and only 1 df loss
+anova(logreg, logreg3) ##By adding the interaction effect in our final model the deviance was reduced by 36.8 and only 4 df loss
 
 ##Look at residuals
 plot(logreg3$residuals) #Looks good
@@ -117,7 +119,7 @@ logreg3$fitted.values
 
 #############################################################3
 
-#Question 3:Use the data set heart to fit a logistic regression 
+#Question 3:3.	Use the data set heart to fit a logistic regression 
 #using a probit link to the variable Death using covariates AgeGroup, Severity, Delay and Region.
 
 ###############################################################
@@ -131,12 +133,12 @@ summary(probit)
 1-pchisq(109.02, 69) #pvalue below .05 so Ha
 
 #Try interaciton effect: AgeGroup * Severity
-probit2 <- glm(cbind(Deaths, NDeath) ~ AgeGroup * Severity + Delay + Region, family = binomial(link = probit), data = heart2)
-summary(probit2) #AIC is 311
+probit2 <- glm(cbind(Deaths, NDeath) ~ factor(AgeGroup) * factor(Severity) + factor(Delay) + factor(Region), family = binomial(link = probit), data = heart2)
+summary(probit2) #AIC is 313
 
 #Sig are all
-#Residual deviance:   88.607  on 68  degrees of freedom
-1-pchisq(88.607, 68) #pvalue below .05 so Ha
+#Residual deviance:   77.232  on 61  degrees of freedom
+1-pchisq(77.232, 61) #pvalue above .05 so H0
 
 
 #Try qusi
@@ -150,7 +152,7 @@ summary(probit4)
 ##model probit 2 was better than these. 
 
 ##to see the effect of adding the new terms
-anova(probit, probit2) ##By adding the interaction effect in our final model the deviance was reduced by 20.416 and only 1 df loss
+anova(probit, probit2) ##By adding the interaction effect in our final model the deviance was reduced by 31.7 and only 8 df loss
 
 ##Look at residuals
 plot(probit2$residuals) #Looks good
